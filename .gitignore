@@ -68,3 +68,4 @@ yarn-error.log*
 
 # RSpec
 /backend/.rspec_status
+backend/vendor/bundle/
