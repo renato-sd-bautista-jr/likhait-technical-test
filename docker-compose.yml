@@ -46,11 +46,15 @@ services:
       DATABASE_PASSWORD: expense_password
     ports:
       - "3000:3000"
+    volumes:
+      - ./backend:/rails
+      - backend_gems:/rails/vendor/bundle
     depends_on:
       db:
         condition: service_healthy
     command: >
       sh -c "
+        bundle install &&
         bundle exec rails db:migrate &&
         bundle exec rails server -b 0.0.0.0
       "
