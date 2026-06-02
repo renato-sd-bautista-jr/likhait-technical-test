@@ -1,0 +1,13 @@
+# Auto-detect text files and normalize to LF
+* text=auto
+
+# Shell scripts need LF line endings for Docker/Linux
+*.sh text eol=lf
+docker-entrypoint text eol=lf
+Dockerfile text eol=lf
+
+# Ruby files need LF line endings for Linux containers
+*.rb text eol=lf
+
+# Binstubs (Ruby scripts without .rb extension) need LF for Docker/Linux
+backend/bin/* text eol=lf

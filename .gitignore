@@ -30,6 +30,9 @@
 
 # Node modules
 /frontend/node_modules
+
+# Ruby gems
+/backend/vendor/bundle
 /frontend/dist
 
 # Environment variables
@@ -65,3 +68,4 @@ yarn-error.log*
 
 # RSpec
 /backend/.rspec_status
+backend/vendor/bundle/

@@ -34,6 +34,17 @@ export async function getExpenses(
 }
 
 /**
+ * Fetch recent expenses (latest 5)
+ */
+export async function fetchRecentExpenses(): Promise<Expense[]> {
+  const response = await fetch(`${API_BASE_URL}/expenses/recent`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch recent expenses");
+  }
+  return response.json();
+}
+
+/**
  * Fetch all categories
  */
 export async function fetchCategories(): Promise<
@@ -43,6 +54,30 @@ export async function fetchCategories(): Promise<
   if (!response.ok) {
     throw new Error("Failed to fetch categories");
   }
+  return response.json();
+}
+
+/**
+ * Create a new category
+ */
+export async function createCategory(
+  name: string,
+): Promise<{ id: number; name: string }> {
+  const response = await fetch(`${API_BASE_URL}/categories`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ category: { name } }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(
+      errorData?.errors?.join(", ") || "Failed to create category",
+    );
+  }
+
   return response.json();
 }
 

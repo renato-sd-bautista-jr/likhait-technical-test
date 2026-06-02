@@ -188,6 +188,31 @@ rails db:reset
 rails console
 ```
 
+## Completed Tasks
+
+### BUG-001: Expense Ordering Bug Fix
+**Branch:** `bugfix/BUG-001-expense-ordering`
+
+Fixed expense list ordering — changed from `created_at` to `date` field so expenses are sorted by their actual transaction date.
+
+Also added a **Recent Transactions** section (highlighted card above the monthly table) showing the 5 most recent expenses ordered by date.
+
+### FEATURE-001: Category Management
+**Branch:** `feature/FEATURE-001-category-management`
+
+- Backend `POST /api/categories` endpoint with model validations
+- Frontend "Add Category" inline form inside the **Add New Expense** modal
+- Category dropdown in expense form supports inline creation — new categories are immediately available for selection
+- Fixed date filtering — expenses now filter by `date` column instead of `created_at`
+
+### BONUS-001: Future Date Validation
+**Branch:** `bonus/BONUS-001-future-date-validation`
+
+- Backend model validation preventing future dates with clear error message
+- Frontend date picker limits selection to today and earlier (`max` attribute)
+- Form validation shows inline error + popup modal when a future date is submitted
+- Database seeding optimised — removed auto-seed from startup for faster container boot
+
 ## Environment Configuration
 
 ### Backend Environment Variables (Production)
