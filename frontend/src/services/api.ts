@@ -34,6 +34,17 @@ export async function getExpenses(
 }
 
 /**
+ * Fetch recent expenses (most recently created)
+ */
+export async function fetchRecentExpenses(): Promise<Expense[]> {
+  const response = await fetch(`${API_BASE_URL}/expenses?recent=1`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch recent expenses");
+  }
+  return response.json();
+}
+
+/**
  * Fetch all categories
  */
 export async function fetchCategories(): Promise<
