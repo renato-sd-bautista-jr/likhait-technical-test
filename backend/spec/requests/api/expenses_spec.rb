@@ -16,7 +16,7 @@ RSpec.describe "Api::Expenses", type: :request do
       expect(json.length).to eq(2)
     end
 
-    it "returns expenses in descending order by created_at" do
+    it "returns expenses in descending order by date" do
       get "/api/expenses"
 
       json = JSON.parse(response.body)
