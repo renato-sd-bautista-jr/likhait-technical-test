@@ -23,6 +23,15 @@ RSpec.describe "Api::Expenses", type: :request do
       expect(json.first["id"]).to eq(expense2.id)
       expect(json.last["id"]).to eq(expense1.id)
     end
+
+    it "returns recent expenses ordered by created_at" do
+      get "/api/expenses?recent=1"
+
+      expect(response).to have_http_status(:success)
+      json = JSON.parse(response.body)
+      expect(json.length).to eq(2)
+      expect(json.first["id"]).to eq(expense2.id)
+    end
   end
 
   describe "POST /api/expenses" do

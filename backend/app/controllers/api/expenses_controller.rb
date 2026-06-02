@@ -1,5 +1,11 @@
 class Api::ExpensesController < ApplicationController
   def index
+    if params[:recent].present?
+      expenses = Expense.includes(:category).order(created_at: :desc).limit(5)
+      render json: expenses.map { |expense| format_expense(expense) }
+      return
+    end
+
     expenses = Expense.includes(:category).order(date: :desc, created_at: :desc)
 
     if params[:year].present? && params[:month].present?

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { getExpenses, createExpense } from "../services/api";
+import { getExpenses, createExpense, fetchRecentExpenses } from "../services/api";
 import { Expense, ExpenseFormData } from "../types";
 import YearNavigation from "../components/YearNavigation";
 import { MonthNavigation } from "../components/MonthNavigation";
 import CategoryBreakdown from "../components/CategoryBreakdown";
 import { CalendarExpenseTable } from "../components/CalendarExpenseTable";
+import { RecentTransactions } from "../components/RecentTransactions";
 import { ExpenseForm } from "../components/ExpenseForm";
 import { Modal, Button } from "../vibes";
 import { COLORS } from "../constants/colors";
 
 const HistoryPage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [recentExpenses, setRecentExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -52,8 +54,12 @@ const HistoryPage: React.FC = () => {
   const fetchExpenses = async () => {
     try {
       setLoading(true);
-      const data = await getExpenses(selectedYear, selectedMonth);
-      setExpenses(data);
+      const [monthly, recent] = await Promise.all([
+        getExpenses(selectedYear, selectedMonth),
+        fetchRecentExpenses(),
+      ]);
+      setExpenses(monthly);
+      setRecentExpenses(recent);
     } catch (error) {
       console.error("Error fetching expenses:", error);
     } finally {
@@ -164,6 +170,7 @@ const HistoryPage: React.FC = () => {
           <div style={loadingStyle}>Loading...</div>
         ) : (
           <>
+            <RecentTransactions expenses={recentExpenses} />
             <CategoryBreakdown
               categories={categories}
               total={total}
