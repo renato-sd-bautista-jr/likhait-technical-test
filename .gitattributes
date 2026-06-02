@@ -5,3 +5,6 @@
 *.sh text eol=lf
 docker-entrypoint text eol=lf
 Dockerfile text eol=lf
+
+# Ruby files need LF line endings for Linux containers
+*.rb text eol=lf
