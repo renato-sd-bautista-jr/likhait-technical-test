@@ -2,10 +2,11 @@
  * Form component for adding/editing expenses
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ExpenseFormData } from "../types";
 import { EXPENSE_CATEGORIES } from "../constants/categories";
-import { TextField, SelectBox, Button } from "../vibes";
+import { COLORS } from "../constants/colors";
+import { TextField, SelectBox, Button, Modal } from "../vibes";
 import { useExpenseForm } from "../hooks/useExpenseForm";
 import { createCategory } from "../services/api";
 import { formatDate } from "../utils/expenseUtils";
@@ -35,6 +36,13 @@ export function ExpenseForm({
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [addingCategory, setAddingCategory] = useState(false);
+  const [showFutureDateModal, setShowFutureDateModal] = useState(false);
+
+  useEffect(() => {
+    if (errors.date === "Future dates are not allowed") {
+      setShowFutureDateModal(true);
+    }
+  }, [errors.date]);
 
   const mergedCategories = localCategories.length > 0
     ? localCategories
@@ -189,6 +197,25 @@ export function ExpenseForm({
           </Button>
         )}
       </div>
+
+      <Modal
+        isOpen={showFutureDateModal}
+        onClose={() => setShowFutureDateModal(false)}
+        title="Invalid Date"
+        maxWidth="400px"
+      >
+        <p style={{ margin: "0 0 1rem", color: COLORS.text.primary, lineHeight: 1.5 }}>
+          Future dates are not allowed. Please select a date on or before today.
+        </p>
+        <Button
+          type="button"
+          variant="primary"
+          onClick={() => setShowFutureDateModal(false)}
+          fullWidth
+        >
+          OK
+        </Button>
+      </Modal>
     </form>
   );
 }
