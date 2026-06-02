@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { getExpenses, createExpense, fetchCategories, createCategory } from "../services/api";
+import { getExpenses, createExpense, fetchCategories } from "../services/api";
 import { Expense, ExpenseFormData } from "../types";
 import YearNavigation from "../components/YearNavigation";
 import { MonthNavigation } from "../components/MonthNavigation";
 import CategoryBreakdown from "../components/CategoryBreakdown";
 import { CalendarExpenseTable } from "../components/CalendarExpenseTable";
 import { ExpenseForm } from "../components/ExpenseForm";
-import { CategoryForm } from "../components/CategoryForm";
 import { Modal, Button } from "../vibes";
 import { COLORS } from "../constants/colors";
 
@@ -14,7 +13,6 @@ const HistoryPage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [categoryList, setCategoryList] = useState<Array<{ id: number; name: string }>>([]);
 
   // Get year and month from URL params, default to current date if not provided
@@ -98,12 +96,6 @@ const HistoryPage: React.FC = () => {
     }
   };
 
-  const handleAddCategory = async (name: string) => {
-    await createCategory(name);
-    setIsCategoryModalOpen(false);
-    await loadCategories();
-  };
-
   // Calculate category breakdown
   const categoryData = expenses.reduce(
     (acc, expense) => {
@@ -171,9 +163,6 @@ const HistoryPage: React.FC = () => {
           />
         </div>
         <div style={{ display: "flex", gap: "12px" }}>
-          <Button variant="secondary" onClick={() => setIsCategoryModalOpen(true)}>
-            Add Category
-          </Button>
           <Button variant="primary" onClick={() => setIsModalOpen(true)}>
             Add Expense
           </Button>
@@ -219,16 +208,6 @@ const HistoryPage: React.FC = () => {
         />
       </Modal>
 
-      <Modal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-        title="Add New Category"
-      >
-        <CategoryForm
-          onSubmit={handleAddCategory}
-          onCancel={() => setIsCategoryModalOpen(false)}
-        />
-      </Modal>
     </div>
   );
 };
