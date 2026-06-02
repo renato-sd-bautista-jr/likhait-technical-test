@@ -8,23 +8,17 @@ interface CategoryFormProps {
 
 export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
   const [name, setName] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = name.trim();
-    if (!trimmed) {
-      setError("Category name is required");
-      return;
-    }
+    if (!trimmed) return;
     setIsSubmitting(true);
-    setError(null);
     try {
       await onSubmit(trimmed);
       setName("");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create category");
+    } catch {
     } finally {
       setIsSubmitting(false);
     }
@@ -49,11 +43,7 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
         type="text"
         placeholder="Enter category name"
         value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-          if (error) setError(null);
-        }}
-        error={error || undefined}
+        onChange={(e) => setName(e.target.value)}
         fullWidth
         required
       />
@@ -61,10 +51,10 @@ export function CategoryForm({ onSubmit, onCancel }: CategoryFormProps) {
         <Button
           type="submit"
           variant="primary"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !name.trim()}
           fullWidth
         >
-          {isSubmitting ? "Creating..." : "Create Category"}
+          {isSubmitting ? "Submitting..." : "Add Category"}
         </Button>
         {onCancel && (
           <Button

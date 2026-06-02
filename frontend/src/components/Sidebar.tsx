@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { COLORS } from "../constants/colors";
+import { fetchCategories, createCategory } from "../services/api";
+import { CategoryForm } from "./CategoryForm";
 
 interface SidebarProps {
   onNavigate?: (page: string) => void;
@@ -14,6 +16,20 @@ const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed = false,
   onToggleCollapse,
 }) => {
+  const [categories, setCategories] = useState<
+    Array<{ id: number; name: string }>
+  >([]);
+
+  useEffect(() => {
+    fetchCategories()
+      .then(setCategories)
+      .catch(() => {});
+  }, []);
+
+  const handleAddCategory = async (name: string) => {
+    const newCategory = await createCategory(name);
+    setCategories((prev) => [...prev, newCategory]);
+  };
   const sidebarStyle: React.CSSProperties = {
     width: isCollapsed ? "80px" : "360px",
     height: "100vh",
@@ -169,6 +185,46 @@ const Sidebar: React.FC<SidebarProps> = ({
           <span style={navTextStyle}>History</span>
         </button>
       </nav>
+
+      {!isCollapsed && (
+        <div style={{ padding: "0 24px", marginBottom: "8px" }}>
+          <div
+            style={{
+              fontSize: "12px",
+              fontWeight: 600,
+              color: COLORS.primary.p07,
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+              marginBottom: "8px",
+            }}
+          >
+            Categories
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+              marginBottom: "12px",
+            }}
+          >
+            {categories.map((cat) => (
+              <div
+                key={cat.id}
+                style={{
+                  fontSize: "14px",
+                  color: COLORS.primary.p09,
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                }}
+              >
+                {cat.name}
+              </div>
+            ))}
+          </div>
+          <CategoryForm onSubmit={handleAddCategory} />
+        </div>
+      )}
     </aside>
   );
 };
